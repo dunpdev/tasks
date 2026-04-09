@@ -1,23 +1,25 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status 
 from .models import Kategorija, Obaveza
 from .serializers import KategorijaSerializer, ObavezaSerializer
-from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-
+from rest_framework.viewsets import ModelViewSet
 # Create your views here.
 
-class CategoryListCreateView(ListCreateAPIView):
-    queryset = Kategorija.objects.all()
-    serializer_class = KategorijaSerializer
+# class CategoryListCreateView(ListCreateAPIView):
+#     queryset = Kategorija.objects.all()
+#     serializer_class = KategorijaSerializer
     
 
-class CategoryDetailView(RetrieveUpdateDestroyAPIView):
+# class CategoryDetailView(RetrieveUpdateDestroyAPIView):
+#     queryset = Kategorija.objects.all()
+#     serializer_class = KategorijaSerializer
+    
+class CategoryViewSet(ModelViewSet):
     queryset = Kategorija.objects.all()
     serializer_class = KategorijaSerializer
-
+        
+class TaskViewSet(ModelViewSet):
+    queryset = Obaveza.objects.all()
+    serializer_class = ObavezaSerializer
 # @api_view(["GET","POST"])
 # def get_all_categories(request):
 #     if request.method == "GET":
@@ -52,9 +54,9 @@ class CategoryDetailView(RetrieveUpdateDestroyAPIView):
 #         return Response(status=status.HTTP_204_NO_CONTENT)
         
 # za sledeci cas odraditi views za Obaveze (GET, POST, DELETE, PUT, PATCH)
-class ObavezaListCreateView(ListCreateAPIView):
-    queryset = Obaveza.objects.all()
-    serializer_class = ObavezaSerializer
+# class ObavezaListCreateView(ListCreateAPIView):
+#     queryset = Obaveza.objects.all()
+#     serializer_class = ObavezaSerializer
     # def get(self, request):
     #     obaveze = Obaveza.objects.all()
     #     serializer = ObavezaSerializer(obaveze, many=True)
@@ -66,9 +68,9 @@ class ObavezaListCreateView(ListCreateAPIView):
     #         serializer.save()
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-class ObavezaDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Obaveza.objects.all()
-    serializer_class = ObavezaSerializer
+# class ObavezaDetailView(RetrieveUpdateDestroyAPIView):
+#     queryset = Obaveza.objects.all()
+#     serializer_class = ObavezaSerializer
     
 # class ObavezaDetailView(APIView):
 #     def get_object(self, id):
