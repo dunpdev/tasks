@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import Kategorija, Obaveza
 from .serializers import KategorijaSerializer, ObavezaSerializer
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 
 # class CategoryListCreateView(ListCreateAPIView):
@@ -20,10 +22,23 @@ class CategoryViewSet(ModelViewSet):
 class TaskViewSet(ModelViewSet):
     queryset = Obaveza.objects.all()
     serializer_class = ObavezaSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["zavrseno","prioritet","kategorija"]
+    search_fields = ["naslov", "opis"]
+    ordering_fields = ["kreirano", "rok_za_zavrsetak", "prioritet"]
+    ordering = ["-kreirano"]
+    
 # @api_view(["GET","POST"])
 # def get_all_categories(request):
 #     if request.method == "GET":
-#         kategorije = Kategorija.objects.all()
+#         if request.GET.get("naziv"):
+#             kategorije = Kategorija.objects.filter(naziv=request.GET.get("naziv"))
+#         else:
+#             kategorije = Kategorija.objects.all()
+            
+#         if request.GET.get("opis"):
+#             kategorije = kategorije.filter(opis__icontains=request.GET.get("opis"))
+        
 #         serializer = KategorijaSerializer(kategorije, many=True)
 #         return Response(serializer.data)
 #     elif request.method == "POST":
