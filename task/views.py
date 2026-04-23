@@ -4,6 +4,7 @@ from .serializers import KategorijaSerializer, ObavezaSerializer
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import BasePermission, IsAuthenticated
 # Create your views here.
 
 # class CategoryListCreateView(ListCreateAPIView):
@@ -14,10 +15,18 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 # class CategoryDetailView(RetrieveUpdateDestroyAPIView):
 #     queryset = Kategorija.objects.all()
 #     serializer_class = KategorijaSerializer
+class IsStudentInGroup(BasePermission):
+    def has_permission(self, request, view):
+        return (
+            request.user and
+            request.user.is_authenticated and
+            request.user.groups.filter(name="view_perms").exists()
+        )
     
 class CategoryViewSet(ModelViewSet):
     queryset = Kategorija.objects.all()
     serializer_class = KategorijaSerializer
+    permission_classes = [IsAuthenticated]
         
 class TaskViewSet(ModelViewSet):
     queryset = Obaveza.objects.all()
@@ -27,6 +36,7 @@ class TaskViewSet(ModelViewSet):
     search_fields = ["naslov", "opis"]
     ordering_fields = ["kreirano", "rok_za_zavrsetak", "prioritet"]
     ordering = ["-kreirano"]
+    permission_classes = [IsStudentInGroup]
     
 # @api_view(["GET","POST"])
 # def get_all_categories(request):
