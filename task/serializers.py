@@ -12,4 +12,10 @@ class ObavezaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obaveza
         fields = ["id", "naslov", "opis", "kategorija","kategorija_detalji", "kreirano","rok_za_zavrsetak",
-        "zavrseno","prioritet"]
+        "zavrseno","prioritet","slika"]
+        
+class ObavezaSlikaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Obaveza
+        fields = ["id", "slika"]
+        read_only_fields = ["id"]

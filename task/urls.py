@@ -1,12 +1,14 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from task import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('categories', views.CategoryViewSet)
 router.register('tasks', views.TaskViewSet)
 
-urlpatterns = router.urls
+urlpatterns = router.urls  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # [
 #     path("categories/", views.CategoryListCreateView.as_view(), name="Get all"),
 #     path("category/<int:id>/", views.CategoryDetailView.as_view(), name="Get by id"),

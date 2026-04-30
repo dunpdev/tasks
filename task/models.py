@@ -30,6 +30,7 @@ class Obaveza(models.Model):
     rok_za_zavrsetak = models.DateTimeField(default=timezone.now)
     zavrseno = models.BooleanField(default=False)
     prioritet = models.CharField(max_length=7, choices=PRIORITET_CHOICES, default=SREDNJI)
+    slika = models.ImageField(upload_to="obaveze/", blank=True, null=True)
 
     kategorija = models.ForeignKey(Kategorija, on_delete=models.SET_NULL, null=True,blank=True, related_name="obaveze")
 

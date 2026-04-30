@@ -5,6 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.decorators import action
 # Create your views here.
 
 # class CategoryListCreateView(ListCreateAPIView):
@@ -36,7 +37,22 @@ class TaskViewSet(ModelViewSet):
     search_fields = ["naslov", "opis"]
     ordering_fields = ["kreirano", "rok_za_zavrsetak", "prioritet"]
     ordering = ["-kreirano"]
-    permission_classes = [IsStudentInGroup]
+    # permission_classes = [IsStudentInGroup]
+    @action(detail=True, methods=["POST"], url_path="upload")
+    def upload_slike(self, request, pK=None):
+        obaveza = self.get_object()
+        serializer = ObavezaSlikaSerializer(obaveza, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "success": True,
+                "message": "Slika uspešno uploadovana",
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "success": False,
+            "message": serializer.errors,
+            }, status=status.HTTP_400_BAD_REQUEST)
+
     
 # @api_view(["GET","POST"])
 # def get_all_categories(request):
