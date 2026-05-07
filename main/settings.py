@@ -153,3 +153,12 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
 }
+
+CELERY_BROKER_URL = "redis://localhost:6379/1"
+CELERY_BEAT_SCHEDULE = {
+    "notify_users":{
+        "task": "hello.tasks.notify_user",
+        "schedule": 10,
+        "args": ["This is a scheduled notification!"]
+    }
+}
