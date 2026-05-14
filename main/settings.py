@@ -162,3 +162,16 @@ CELERY_BEAT_SCHEDULE = {
         "args": ["This is a scheduled notification!"]
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",
+        # "OPTIONS":{
+        #     # "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        #     "CLIENT_CONNECT_TIMEOUT": 5,
+        #     "SOCKET_TIMEOUT": 5,
+        #     "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+        # }
+    }
+}

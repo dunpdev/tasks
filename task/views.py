@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from django.shortcuts import render
 from .models import Kategorija, Obaveza
 from .serializers import KategorijaSerializer, ObavezaSerializer
@@ -6,6 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 
 # class CategoryListCreateView(ListCreateAPIView):
@@ -27,7 +31,7 @@ class IsStudentInGroup(BasePermission):
 class CategoryViewSet(ModelViewSet):
     queryset = Kategorija.objects.all()
     serializer_class = KategorijaSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
         
 class TaskViewSet(ModelViewSet):
     queryset = Obaveza.objects.all()
@@ -37,6 +41,37 @@ class TaskViewSet(ModelViewSet):
     search_fields = ["naslov", "opis"]
     ordering_fields = ["kreirano", "rok_za_zavrsetak", "prioritet"]
     ordering = ["-kreirano"]
+    
+    def list(self, request, *args, **kwargs):
+        cached_key = "obaveze_list"
+        cached = cache.get(cached_key)
+        if cached:
+            return Response(cached)
+        
+        response = super().list(request, *args, **kwargs)
+        cache.set(cached_key, response.data, timeout=300)
+        return response
+    
+    # retrieve
+    def retrieve(self, request, *args, **kwargs):
+        cached_key = f"obaveza_detalji_{kwargs['pk']}"
+        cached = cache.get(cached_key)
+        if cached:
+            return Response(cached)
+        response = super().retrieve(request, *args, **kwargs)
+        cache.set(cached_key, response.data, timeout=300)
+        return response
+    # create
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        cache.delete("obaveze_list")
+        return response
+    # destroy
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
+        cache.clear()
+        return response
+
     # permission_classes = [IsStudentInGroup]
     @action(detail=True, methods=["POST"], url_path="upload")
     def upload_slike(self, request, pK=None):
