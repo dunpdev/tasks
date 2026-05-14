@@ -1,0 +1,12 @@
+WARNING Not Found: /
+WARNING Not Found: /
+ERROR Internal Server Error: /task/tasks/
+Traceback (most recent call last):
+  File "/Users/administrator/Desktop/tasks/.venv/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/administrator/Desktop/tasks/.venv/lib/python3.14/site-packages/django/utils/deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+  File "/Users/administrator/Desktop/tasks/main/loggingMiddleware.py", line 11, in process_request
+    logger.info(f"Pristigao je request: {request.method} {request.path} | IP: {self.get_client_ip(request)}")
+                                                                               ^^^^^^^^^^^^^^^^^^
+AttributeError: 'LoggingMiddleware' object has no attribute 'get_client_ip'

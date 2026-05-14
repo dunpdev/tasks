@@ -1,3 +1,5 @@
+import logging
+
 from django.core.cache import cache
 
 from django.shortcuts import render
@@ -10,6 +12,7 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 # class CategoryListCreateView(ListCreateAPIView):
