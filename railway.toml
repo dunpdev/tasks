@@ -1,7 +1,0 @@
-[build]
-builder = "dockerfile"
-
-[deploy]
-startCommand = "gunicorn main.wsgi --log-file -"
-restartPolicyType = "always"
-restartPolicyMaxRetries = 5

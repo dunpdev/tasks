@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -22,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-_gm^wxqbv0g-bhxwe7@4q@+*l@bay653!37#yar8&__$iatxe7")
+SECRET_KEY = "django-insecure-_gm^wxqbv0g-bhxwe7@4q@+*l@bay653!37#yar8&__$iatxe7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -86,26 +85,18 @@ WSGI_APPLICATION = "main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if os.getenv('DATABASE_URL'):
-    import dj_database_url
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+DATABASES = {
+    "default": {
+        # "ENGINE": "django.db.backends.sqlite3",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "obavezeDB",
+        "PASSWORD": "SoftInz1",
+        "USER": "postgres",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "obavezeDB",
-            "PASSWORD": "SoftInz1",
-            "USER": "postgres",
-            "HOST": "localhost",
-            "PORT": "5432",
-        }
-    }
+}
 
 
 # Password validation
@@ -164,10 +155,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
 }
 
-# Redis Configuration
-REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/1')
-
-CELERY_BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = "redis://localhost:6379/1"
 CELERY_BEAT_SCHEDULE = {
     "notify_users":{
         "task": "hello.tasks.notify_user",
@@ -179,7 +167,13 @@ CELERY_BEAT_SCHEDULE = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": REDIS_URL,
+        "LOCATION": "redis://localhost:6379/1",
+        # "OPTIONS":{
+        #     # "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        #     "CLIENT_CONNECT_TIMEOUT": 5,
+        #     "SOCKET_TIMEOUT": 5,
+        #     "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+        # }
     }
 }
 
