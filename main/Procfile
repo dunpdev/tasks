@@ -1,4 +1,3 @@
-release: python manage.py migrate --settings=main.settings_prod && python manage.py collectstatic --noinput --settings=main.settings_prod
-web: gunicorn main.wsgi:application --env DJANGO_SETTINGS_MODULE=main.settings_prod --log-file -
-worker: celery -A main worker -l info --settings=main.settings_prod
-beat: celery -A main beat -l info --settings=main.settings_prod
+web: gunicorn main.wsgi --log-file -
+worker: celery -A main worker -l info
+beat: celery -A main beat -l info
