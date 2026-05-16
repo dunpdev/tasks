@@ -1,0 +1,13 @@
+*.pyc
+__pycache__
+.DS_Store
+.env
+.venv
+venv/
+logs/
+media/
+db.sqlite3
+.git
+.gitignore
+Pipfile.lock
+celerybeat-schedule
