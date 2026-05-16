@@ -1,0 +1,11 @@
+*.md
+.git/
+.gitignore
+.DS_Store
+.env.example
+tests/
+*.sqlite3
+logs/
+docs/
+.vscode/
+.idea/
