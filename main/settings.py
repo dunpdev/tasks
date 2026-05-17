@@ -166,10 +166,12 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
+REDIS_URL = "redis://default:MgDqtRQcTPxtuKiDkpmBsXGHaptDlNKh@redis.railway.internal:6379/1"
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://localhost:6379/1",
+        "LOCATION": REDIS_URL,
         # "OPTIONS":{
         #     # "CLIENT_CLASS": "django_redis.client.DefaultClient",
         #     "CLIENT_CONNECT_TIMEOUT": 5,
