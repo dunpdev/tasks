@@ -14,6 +14,14 @@ SECURE_SSL_REDIRECT = not os.environ.get("DISABLE_SECURE_SSL_REDIRECT", False)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+# WhiteNoise for static file serving
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Static files
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 # Database - DATABASE_URL is provided by Railway/Render
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
