@@ -13,6 +13,8 @@ celery = "*"
 flower = "*"
 django-cors-headers = "*"
 Pillow = "*"
+dj-database-url = "*"
+gunicorn = "*"
 
 [dev-packages]
 
