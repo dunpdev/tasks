@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import dj_database_url
 from datetime import timedelta
 from pathlib import Path
 
@@ -81,24 +83,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "main.wsgi.application"
 
-DATABASE_URL = "postgresql://postgres:vyCPoJMOmNDriMsCWitVoKoTwRnDcFsi@postgres.railway.internal:5432/railway"
-
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        # "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "railway",
-        "PASSWORD": "vyCPoJMOmNDriMsCWitVoKoTwRnDcFsi",
-        "USER": "postgres",
-        "HOST": "postgres.railway.internal",
-        "PORT": "5432",
+# Check for DATABASE_URL environment variable (used in production)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Production: use dj_database_url to parse Railway's DATABASE_URL
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Development: use SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -157,27 +165,25 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
 }
 
-CELERY_BROKER_URL = "redis://localhost:6379/1"
+# Celery & Redis Configuration
+# Check for REDIS_URL environment variable (Railway provides this)
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
+
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+
 CELERY_BEAT_SCHEDULE = {
-    "notify_users":{
+    "notify_users": {
         "task": "hello.tasks.notify_user",
         "schedule": 10,
         "args": ["This is a scheduled notification!"]
     }
 }
 
-REDIS_URL = "redis://default:MgDqtRQcTPxtuKiDkpmBsXGHaptDlNKh@redis.railway.internal:6379/1"
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": REDIS_URL,
-        # "OPTIONS":{
-        #     # "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        #     "CLIENT_CONNECT_TIMEOUT": 5,
-        #     "SOCKET_TIMEOUT": 5,
-        #     "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
-        # }
     }
 }
 
